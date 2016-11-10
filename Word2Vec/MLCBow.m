@@ -146,6 +146,7 @@
             double *layer = calloc(_layerSize, sizeof(double));
             double *layerLoss = calloc(_layerSize, sizeof(double));
             // sum the surrounding words
+            double cw = 0;
             for (int j = start; j < 2 * _windowSize + 1 - start; j ++) if(j != _windowSize){
                 int cindex = i - _windowSize + j;
                 if (cindex < 0 || cindex >= senPos) {
@@ -153,7 +154,9 @@
                 }
                 int cword = sentence[cindex];
                 vDSP_vaddD(layer, 1, (_neur1 + _layerSize * cword), 1, layer, 1, _layerSize);
+                cw++;
             }
+            vDSP_vsdivD(layer, 1, &cw, layer, 1, _layerSize);
             
             // update neur2
             for (int l = 0; l < _loader.dictionary[word].codeLength; l++) {
@@ -238,6 +241,7 @@
             double *layer = calloc(_layerSize, sizeof(double));
             double *layerLoss = calloc(_layerSize, sizeof(double));
             // sum the surrounding words
+            double cw = 0;
             for (int j = start; j < 2 * _windowSize + 1 - start; j ++) if(j != _windowSize){
                 int cindex = i - _windowSize + j;
                 if (cindex < 0 || cindex >= senPos) {
@@ -245,7 +249,9 @@
                 }
                 int cword = sentence[cindex];
                 vDSP_vaddD(layer, 1, (_neur1 + _layerSize * cword), 1, layer, 1, _layerSize);
+                cw++;
             }
+            vDSP_vsdivD(layer, 1, &cw, layer, 1, _layerSize);
             
             // update neur2
             int label, seed;
